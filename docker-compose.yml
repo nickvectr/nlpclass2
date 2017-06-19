@@ -1,0 +1,10 @@
+version: '2'
+services:
+    nlp:
+        build: .
+        image: nlp:vectr
+        volumes:
+        - "./:/nlp"
+        environment:
+        - TERM=xterm-256color
+        command: tail -F anything
