@@ -10,3 +10,5 @@ ADD .bashrc /root
 ADD .vimrc /root
 RUN mkdir -p /root/.vim/colors/
 ADD .vim/colors/jellybeans.vim /root/.vim/colors
+ADD init_nltk.py /nlp
+RUN python init_nltk.py
