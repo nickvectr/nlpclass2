@@ -1,3 +1,7 @@
+'''
+TF-DF and t-SNE experiment
+Section 2, Lecture 9
+'''
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -7,7 +11,7 @@ from sklearn.feature_extraction.text import TfidfTransformer as TFIDF
 from sklearn.manifold import TSNE
 
 def tfidf_tsne():
-    indx_sent, word2idx, idx2word = Sentences().limit()
+    indx_sent, word2idx, idx2word = Sentences().limit_vocab()
 
     word_sent_counts = np.zeros((len(word2idx)+1,len(indx_sent)+1))
     j = 0

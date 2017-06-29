@@ -15,8 +15,14 @@ SENTENCES_KEEP_WORDS=['king',
                      ]
 
 class Sentences(object):
-    def __init__(self, keep_words=SENTENCES_KEEP_WORDS):
-        self.sentences = brown.sents()
+    def __init__(self, n_sentences=None, keep_words=SENTENCES_KEEP_WORDS):
+        sentences = brown.sents()
+        if n_sentences is None:
+            self.sentences = sentences
+        if n_sentences > len(sentences):
+            self.sentences = sentences
+        else:
+            self.sentences = sentences[:n_sentences]
         self.keep_words = set(keep_words)
         self.indx_sent, self.word2idx, self.idx2word = self._build_idx()
 
@@ -40,7 +46,7 @@ class Sentences(object):
         assert len(set(idx2word)) == len(idx2word)
         return indx_sents, word2idx, idx2word
 
-    def limit(self, n_limit=500):
+    def limit_vocab(self, n_limit=500):
         word2count = {word : 0 for word in self.word2idx.keys()}
         for sentence in self.indx_sent:
             for indx in sentence:
