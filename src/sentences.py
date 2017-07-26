@@ -1,5 +1,6 @@
 from nltk.corpus import brown
 import operator
+import numpy as np
 
 SENTENCES_KEEP_WORDS=['king',
                       'man',
@@ -76,6 +77,42 @@ class Sentences(object):
                                  for idx in sentence]
                 indx_sent_limit.append(new_indx_sent)
         return indx_sent_limit, word2idx_limit, idx2word_limit
+
+    def train_test_split_bigram(self, train_percentage=0.8, n_limit=500):
+        indx_sent, word2idx, idx2word = self.limit_vocab(n_limit=n_limit)
+        train_percentage = 0.8
+
+        n_vocab = len(word2idx.keys())+1
+
+        n_sentence = len(indx_sent)
+        n_train_sentence = round(n_sentence*train_percentage)
+        n_test_sentence = n_sentence - n_train_sentence
+
+        # TRAIN
+        train_sentence = indx_sent[:n_train_sentence]
+        n_train_word = sum(len(sentence)-1 for sentence in train_sentence)
+        X_train = np.zeros((n_vocab, n_train_word))
+        y_train = np.zeros(n_train_word)
+        j = 0
+        for sentence in train_sentence:
+            for idx in range(len(sentence)-1):
+                X_train[sentence[idx], j] = 1
+                y_train[j] = sentence[idx+1]
+                j += 1
+
+        # TEST
+        test_sentence = indx_sent[n_train_sentence:]
+        n_test_word = sum(len(sentence)-1 for sentence in test_sentence)
+        X_test = np.zeros((n_vocab, n_test_word))
+        y_test = np.zeros(n_test_word)
+        j = 0
+        for sentence in test_sentence:
+            for idx in range(len(sentence)-1):
+                X_test[sentence[idx], j] = 1
+                y_test[j] = sentence[idx+1]
+                j += 1
+
+        return X_train, y_train, X_test, y_test
 
 #sentences = Sentences()
 #print(sentences.limit())
